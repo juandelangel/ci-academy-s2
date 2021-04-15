@@ -1,0 +1,19 @@
+{
+  "name": "ci-academy-s2",
+  "version": "1.0.0",
+  "description": "server2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juandelangel/ci-academy-s2.git"
+  },
+  "author": "juan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juandelangel/ci-academy-s2/issues"
+  },
+  "homepage": "https://github.com/juandelangel/ci-academy-s2#readme"
+}
