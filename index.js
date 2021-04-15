@@ -1,5 +1,8 @@
-const http = require('http');
 const https = require('https');
-const handler = (req, res) => res.end('<h1>Hello!</h1>');
-http.createServer(handler).listen(8081);
-https.createServer(handler).listen(8443);
+const fs = require('fs');
+const path = require('path');
+https.createServer({
+    key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, 'cert.pem'))
+}, (req, res) => { res.end('<h1>Hello!</h1>') }
+).listen(8443);
