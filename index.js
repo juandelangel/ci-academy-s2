@@ -25,9 +25,9 @@ https.createServer({
 });
 
 app.get('/foo', function(req, res){
-  console.log('Hello, I am foo.');
+  res.send('Hello, I am foo.');
 });
 
 app.get('/', function(req, res){
-  console.log('Hello shikita.');
+  res.send('Hello shikita.');
 });
