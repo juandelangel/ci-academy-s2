@@ -1,13 +1,22 @@
-const https = require('https');
 const fs = require('fs');
+const https = require('https');
+const express = require('express');
 
-app.get('/home', (req, res) => {
-    res.sen('<h1>Hello2!</h1>')
-})
+const PORT = 443;
 
-const certPath = '/etc/letsencrypt/live/condorinnovationacademy.online';
+const app = express();
+
 https.createServer({
-    key: fs.readFileSync('/etc/letsencrypt/live/condorinnovationacademy.online/privkey.pem'),
-    cert: fs.readFileSync( '/etc/letsencrypt/live/condorinnovationacademy.online/fullchain.pem')
-}, (req, res) => { res.end('<h1>Hello!</h1>') }
-).listen(443);
+  key: fs.readFileSync('/etc/letsencrypt/live/condorinnovationacademy.online/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/condorinnovationacademy.online/fullchain.pem')
+}, app).listen(PORT, function(){
+  console.log("My HTTPS server listening on port " + PORT + "...");
+});
+
+app.get('/foo', function(req, res){
+  console.log('Hello, I am foo.');
+});
+
+app.get('/', function(req, res){
+  console.log('Hello shikita.');
+});
