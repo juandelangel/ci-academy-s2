@@ -31,3 +31,7 @@ app.get('/foo', function(req, res){
 app.get('/', function(req, res){
   res.send('Hello shikita.');
 });
+
+app.get('/file', function(req, res){
+  res.sendFile('/index.html', {root: __dirname})
+});
