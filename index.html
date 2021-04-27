@@ -14,12 +14,17 @@
 
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
 </head>
   
 <body>
     <div>
     	<h5 class="text-primary pb-2">Tu archivo se ha procesado correctamente</h5>
-    	<button type="button" class="btn btn-success">Continuar</button>
+    	<button type="button" class="btn btn-success" onclick="goBack()">Continuar</button>
     </div>
 </body>
   

@@ -33,5 +33,6 @@ app.get('/', function(req, res){
 });
 
 app.get('/file', function(req, res){
+  console.log(req.query)
   res.sendFile('/index.html', {root: __dirname})
 });
