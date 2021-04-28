@@ -10,6 +10,7 @@ var properties = propertiesReader(__dirname+'/project.properties');
 var user = properties.get('user.name');
 var password = properties.get('user.password');
 var vimeoToken=properties.get('vimeo.token');
+var vimeoUriRedirect=properties.get('vimeo.uri.redirect');
 
 axiosVimeo.defaults.headers.common= {'Authorization': 'Bearer '+vimeoToken}
 
