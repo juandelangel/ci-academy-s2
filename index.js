@@ -78,7 +78,7 @@ app.get('/upload-form',function(req,res){
 	var response ={
 		"formData":response.data.upload.form
 	}
-	res.send('/index.html', {root: __dirname});
+	res.sendFile('/index.html', {root: __dirname});
 	})
 });
 
