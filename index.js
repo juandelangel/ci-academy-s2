@@ -78,10 +78,10 @@ app.get('/upload-form',function(req,res){
 	var response ={
 		"formData":response.data.upload.form
 	}
-	res.sendFile('/index.html', {root: __dirname});
+	res.send(response);
 	})
 });
 
 app.get('/video', function(req, res){
-	res.send(response);
+	res.sendFile('/index.html', {root: __dirname});
 });
