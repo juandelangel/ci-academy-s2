@@ -11,6 +11,7 @@ var user = properties.get('user.name');
 var password = properties.get('user.password');
 var vimeoToken=properties.get('vimeo.token');
 var vimeoUriRedirect=properties.get('vimeo.uri.redirect');
+var apexUri=properties.get('apex.uri');
 
 axiosVimeo.defaults.headers.common= {'Authorization': 'Bearer '+vimeoToken}
 
