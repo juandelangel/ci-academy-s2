@@ -45,8 +45,6 @@ app.get('/', function(req, res){
 });
 
 app.get('/file', function(req, res){
-  console.log(req.query)
-  console.log(__dirname)
   var contentId=req.query.contentId;
   var key=req.query.key;
   var user=req.query.user;
@@ -61,7 +59,7 @@ app.get('/file', function(req, res){
 
 app.get('/upload-form',function(req,res){
 	var prefix=vimeoUriRedirect+'/video?videoName='
-	var url=prefix+req.query.videoName+'&courseId='+req.query.courseId;
+	var url=prefix+req.query.videoName+'&contentId='+req.query.contentId;
     var data={
   			"upload": {
     			"approach": "post",
@@ -77,6 +75,8 @@ app.get('/upload-form',function(req,res){
 	var url='https://api.vimeo.com/me/videos';
 	axiosVimeo.post(url,data,'').then(function (response) {
 	var response ={
+		"uri":response.data.uri,
+		"link":response.data.link,
 		"formData":response.data.upload.form
 	}
 	res.send(response);
@@ -84,5 +84,39 @@ app.get('/upload-form',function(req,res){
 });
 
 app.get('/video', function(req, res){
+	var contentId=req.query.contentId;
+	var url=apexUri+'/ords/ci_academy/ci-academy/content/video?contentId='+contentId;
+	client.put(url,'',config).then(function (response) {
+    console.log(response.status);
+  })
 	res.sendFile('/index.html', {root: __dirname});
 });
+
+app.get('/video/delete',function(req,res){
+	var videoId=req.query.videoId;
+	var url='https://api.vimeo.com/videos/'+videoId;
+	axiosVimeo.delete(url,'','').then(function (response) {
+		console.log(response.status);
+		var response ={
+		"status":"success"
+	}
+	res.send(response);
+	})
+});
+
+app.get('/video/update',function(req,res){
+	var videoId=req.query.videoId;
+	var videoName=req.query.videoName;
+	var url='https://api.vimeo.com/videos/'+videoId;
+	var data ={
+		name:videoName
+	}
+	axiosVimeo.patch(url,data,'').then(function (response) {
+		console.log(response.status);
+		var response ={
+		"status":"success"
+	}
+	res.send(response);
+	});
+
+})
