@@ -1,22 +1,32 @@
-/*const https = require('https');
-const fs = require('fs');
-
-
-const certPath = '/etc/letsencrypt/live/condorinnovationacademy.online';
-https.createServer({
-    key: fs.readFileSync('/etc/letsencrypt/live/condorinnovationacademy.online/privkey.pem'),
-    cert: fs.readFileSync( '/etc/letsencrypt/live/condorinnovationacademy.online/fullchain.pem')
-}, (req, res) => { res.end('<h1>Hello!</h1>') }
-).listen(443);*/
-
 const fs = require('fs');
 const https = require('https');
 const express = require('express');
-
+const axios = require('axios');
+const axiosVimeo = require('axios');
+const cors = require('cors');
 const PORT = 443;
+var propertiesReader = require('properties-reader');
+var properties = propertiesReader(__dirname+'/project.properties');
+var user = properties.get('user.name');
+var password = properties.get('user.password');
+var vimeoToken=properties.get('vimeo.token');
+
+axiosVimeo.defaults.headers.common= {'Authorization': 'Bearer '+vimeoToken}
+
+const client = axios.create({
+  httpsAgent: new https.Agent({  
+    rejectUnauthorized: false
+  })
+});
+let config = {
+  auth: {
+    username: user,
+    password: password
+  }
+}
 
 const app = express();
-
+app.use(cors())
 https.createServer({
   key: fs.readFileSync('/etc/letsencrypt/live/condorinnovationacademy.online/privkey.pem'),
   cert: fs.readFileSync('/etc/letsencrypt/live/condorinnovationacademy.online/fullchain.pem')
@@ -34,5 +44,43 @@ app.get('/', function(req, res){
 
 app.get('/file', function(req, res){
   console.log(req.query)
+  console.log(__dirname)
+  var contentId=req.query.contentId;
+  var key=req.query.key;
+  var user=req.query.user;
+  var bucket=req.query.bucket;
+  var prefix=apexUri+'/ords/ci_academy/ci-academy/content/file?';
+  var url=prefix+'CONTENT_ID='+contentId+'&KEY='+key+'&BUCKET='+bucket+'&USER='+user;
+  client.post(url,'',config).then(function (response) {
+    console.log(response.status);
+  })
   res.sendFile('/index.html', {root: __dirname})
+});
+
+app.get('/upload-form',function(req,res){
+	var prefix=vimeoUriRedirect+'/video?videoName='
+	var url=prefix+req.query.videoName+'&courseId='+req.query.courseId;
+    var data={
+  			"upload": {
+    			"approach": "post",
+    			"redirect_url": url
+  			},
+  			"name":req.query.videoName,
+  			"privacy":{
+      			"download": false,
+      			"view": "unlisted",
+      			"comments": "nobody" 
+  			}
+			}
+	var url='https://api.vimeo.com/me/videos';
+	axiosVimeo.post(url,data,'').then(function (response) {
+	var response ={
+		"formData":response.data.upload.form
+	}
+	res.send('/index.html', {root: __dirname});
+	})
+});
+
+app.get('/video', function(req, res){
+	res.send(response);
 });
