@@ -53,6 +53,27 @@ app.get('/file', function(req, res){
   var url=prefix+'CONTENT_ID='+contentId+'&KEY='+key+'&BUCKET='+bucket+'&USER='+user;
   client.post(url,'',config).then(function (response) {
     console.log(response.status);
+  }).catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  res.sendFile('/index.html', {root: __dirname})
+});
+
+app.get('/question/file', function(req, res){
+  var questionId=req.query.questionId;
+  console.log('questionId:'+questionId);
+  var key=req.query.key;
+  var user=req.query.user;
+  var bucket=req.query.bucket;
+  var prefix=apexUri+'/ords/ci_academy/ci-academy/question/file?';
+  var url=prefix+'questionId='+questionId+'&key='+key+'&bucket='+bucket+'&user='+user;
+  console.log('url:'+url);
+  client.post(url,'',config).then(function (response) {
+    console.log(response.status);
+  }).catch(function (error) {
+    // handle error
+    console.log(error);
   })
   res.sendFile('/index.html', {root: __dirname})
 });
@@ -80,7 +101,10 @@ app.get('/upload-form',function(req,res){
 		"formData":response.data.upload.form
 	}
 	res.send(response);
-	})
+	}).catch(function (error) {
+    // handle error
+    console.log(error);
+  })
 });
 
 app.get('/video', function(req, res){
@@ -88,6 +112,9 @@ app.get('/video', function(req, res){
 	var url=apexUri+'/ords/ci_academy/ci-academy/content/video?contentId='+contentId;
 	client.put(url,'',config).then(function (response) {
     console.log(response.status);
+  }).catch(function (error) {
+    // handle error
+    console.log(error);
   })
 	res.sendFile('/index.html', {root: __dirname});
 });
@@ -101,7 +128,10 @@ app.get('/video/delete',function(req,res){
 		"status":"success"
 	}
 	res.send(response);
-	})
+	}).catch(function (error) {
+    // handle error
+    console.log(error);
+  })
 });
 
 app.get('/video/update',function(req,res){
@@ -117,6 +147,9 @@ app.get('/video/update',function(req,res){
 		"status":"success"
 	}
 	res.send(response);
-	});
+	}).catch(function (error) {
+    // handle error
+    console.log(error);
+  });
 
 })
