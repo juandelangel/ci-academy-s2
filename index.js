@@ -78,6 +78,22 @@ app.get('/question/file', function(req, res){
   res.sendFile('/index.html', {root: __dirname})
 });
 
+app.get('/answer/file', function(req, res){
+  var answerId=req.query.answerId;
+  var key=req.query.key;
+  var user=req.query.user;
+  var bucket=req.query.bucket;
+  var prefix=apexUri+'/ords/ci_academy/ci-academy/answer/file?';
+  var url=prefix+'answerId='+answerId+'&key='+key+'&bucket='+bucket+'&user='+user;
+  client.post(url,'',config).then(function (response) {
+    console.log(response.status);
+  }).catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  res.sendFile('/index.html', {root: __dirname})
+});
+
 app.get('/upload-form',function(req,res){
 	var prefix=vimeoUriRedirect+'/video?videoName='
 	var url=prefix+req.query.videoName+'&contentId='+req.query.contentId;
