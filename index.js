@@ -131,7 +131,6 @@ app.get('/upload-form',function(req,res){
     // handle error
     console.log(error);
   })
-  res.send("hi");
 });
 
 app.get('/video', function(req, res){
