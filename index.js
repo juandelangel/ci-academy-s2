@@ -95,6 +95,22 @@ app.get('/answer/file', function(req, res){
 });
 
 
+app.get('/exam/file', function(req, res){
+  var examId=req.query.examId;
+  var key=req.query.key;
+  var user=req.query.user;
+  var bucket=req.query.bucket;
+  var prefix=apexUri+'/ords/ci_academy/ci-academy/exam/file?';
+  var url=prefix+'examId='+answerId+'&key='+key+'&bucket='+bucket+'&user='+user;
+  client.post(url,'','').then(function (response) {
+    console.log(response.status);
+  }).catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  res.sendFile('/index.html', {root: __dirname})
+});
+
 app.get('/upload-form',function(req,res){
   var prefix=vimeoUriRedirect+'/video?videoName='
    if(req.query.contentId!=null){
