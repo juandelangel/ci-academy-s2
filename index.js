@@ -101,7 +101,7 @@ app.get('/exam/file', function(req, res){
   var user=req.query.user;
   var bucket=req.query.bucket;
   var prefix=apexUri+'/ords/ci_academy/ci-academy/exam/file?';
-  var url=prefix+'examId='+answerId+'&key='+key+'&bucket='+bucket+'&user='+user;
+  var url=prefix+'examId='+examId+'&key='+key+'&bucket='+bucket+'&user='+user;
   client.post(url,'','').then(function (response) {
     console.log(response.status);
   }).catch(function (error) {
