@@ -111,6 +111,22 @@ app.get('/exam/file', function(req, res){
   res.sendFile('/index.html', {root: __dirname})
 });
 
+app.get('/exam-application/file', function(req, res){
+  var examApplicationId=req.query.examApplicationId;
+  var key=req.query.key;
+  var user=req.query.user;
+  var bucket=req.query.bucket;
+  var prefix=apexUri+'/ords/ci_academy/ci-academy/exam-application/file?';
+  var url=prefix+'examApplicationId='+examApplicationId+'&key='+key+'&bucket='+bucket+'&user='+user;
+  client.post(url,'','').then(function (response) {
+    console.log(response.status);
+  }).catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  res.sendFile('/index.html', {root: __dirname})
+});
+
 app.get('/upload-form',function(req,res){
   var prefix=vimeoUriRedirect+'/video?videoName='
    if(req.query.contentId!=null){
@@ -122,6 +138,10 @@ app.get('/upload-form',function(req,res){
   if(req.query.examId!=null){
     var url=prefix+req.query.videoName+'&examId='+req.query.examId;
   }
+  if(req.query.examApplicationId!=null){
+    var url=prefix+req.query.videoName+'&examApplicationId='+req.query.examApplicationId;
+  }
+
   console.log(url);
     var data={
         "upload": {
@@ -157,6 +177,9 @@ app.get('/video', function(req, res){
   }
   if(req.query.examId!=null){
     url=apexUri+'/ords/ci_academy/ci-academy/exam/video?examId='+req.query.examId;
+  }
+  if(req.query.examApplicationId!=null){
+    url=apexUri+'/ords/ci_academy/ci-academy/exam-application/video?examApplicationId='+req.query.examApplicationId;
   }
   client.put(url,'','').then(function (response) {
     console.log(response.status);
