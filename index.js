@@ -1,17 +1,26 @@
 const fs = require('fs');
 const https = require('https');
 const express = require('express');
+const bodyParser = require('body-parser')
+const jwt = require('jsonwebtoken')
+const configJwt = require('./configs/config')
 const axios = require('axios');
 const axiosVimeo = require('axios');
 const cors = require('cors');
 const PORT = 443;
 var propertiesReader = require('properties-reader');
 var properties = propertiesReader(__dirname+'/project.properties');
+var authUser = properties.get('auth.User');
+var authPassword = properties.get('auth.Password');
 var user = properties.get('user.name');
 var password = properties.get('user.password');
 var vimeoToken=properties.get('vimeo.token');
 var vimeoUriRedirect=properties.get('vimeo.uri.redirect');
 var apexUri=properties.get('apex.uri');
+
+app.set('key', configJwt.key);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 axiosVimeo.defaults.headers.common= {'Authorization': 'Bearer '+vimeoToken}
 
@@ -27,6 +36,43 @@ let config = {
   }
 }
 
+app.post('/auth', (req, res) => {
+    if(req.body.user == authUser && req.body.password == authPassword) {
+  const payload = {
+   check:  true
+  };
+  const token = jwt.sign(payload, app.get('key'), {
+   expiresIn: 60
+  });
+  res.json({
+   message: 'Successful authentication',
+   token: token
+  });
+    } else {
+        res.json({ message: "Wrong username or password"})
+    }
+})
+
+const protectedRoutes = express.Router(); 
+protectedRoutes.use((req, res, next) => {
+    const token = req.query.token;
+ 
+    if (token) {
+      jwt.verify(token, app.get('key'), (err, decoded) => {      
+        if (err) {
+          return res.json({ mensaje: 'Invalid Token' });    
+        } else {
+          req.decoded = decoded;    
+          next();
+        }
+      });
+    } else {
+      res.send({ 
+          mensaje: 'Token not provided' 
+      });
+    }
+ });
+
 const app = express();
 app.use(cors())
 https.createServer({
@@ -36,7 +82,7 @@ https.createServer({
   console.log("My HTTPS server listening on port " + PORT + "...");
 });
 
-app.get('/foo', function(req, res){
+app.get('/foo',protectedRoutes,function(req, res){
   res.send('Hello, I am foo.');
 });
 
