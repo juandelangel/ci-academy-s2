@@ -9,6 +9,7 @@ const axiosVimeo = require('axios');
 const cors = require('cors');
 const PORT = 443;
 const app = express();
+app.use(cors());
 var propertiesReader = require('properties-reader');
 var properties = propertiesReader(__dirname+'/project.properties');
 var authUser = properties.get('auth.User');
@@ -46,22 +47,34 @@ app.post('/auth', (req, res) => {
    expiresIn: 60
   });
   res.json({
+   status:200,
    message: 'Successful authentication',
    token: token
   });
     } else {
-        res.json({ message: "Wrong username or password"})
+        res.json({ 
+          status: 401,
+          message: {
+            error:'Wrong username or password'
+          }
+      })
     }
 })
 
 const protectedRoutes = express.Router(); 
 protectedRoutes.use((req, res, next) => {
+  console.log("entering protected routes");
     const token = req.query.token;
  
     if (token) {
       jwt.verify(token, app.get('key'), (err, decoded) => {      
         if (err) {
-          return res.json({ mensaje: 'Invalid Token' });    
+          return res.json({ 
+          status: 401,
+          message: {
+            error:'Invalid Token'
+          }
+      });    
         } else {
           req.decoded = decoded;    
           next();
@@ -69,13 +82,17 @@ protectedRoutes.use((req, res, next) => {
       });
     } else {
       res.send({ 
-          mensaje: 'Token not provided' 
+          status: 401,
+          message: {
+            error:'Token not provided for node server'
+          }
       });
+      console.log("Token not provided");
     }
  });
 
 
-app.use(cors());
+//app.use(cors());
 
 https.createServer({
   key: fs.readFileSync('/etc/letsencrypt/live/condorinnovationacademy.online/privkey.pem'),
@@ -85,6 +102,7 @@ https.createServer({
 });
 
 app.get('/foo',protectedRoutes,function(req, res){
+  console.log(req.query.token);
   res.send('Hello, I am foo.');
 });
 
@@ -175,7 +193,7 @@ app.get('/exam-application/file', function(req, res){
   res.sendFile('/index.html', {root: __dirname})
 });
 
-app.get('/upload-form',function(req,res){
+app.get('/upload-form',protectedRoutes,function(req,res){
   var prefix=vimeoUriRedirect+'/video?videoName='
    if(req.query.contentId!=null){
     var url=prefix+req.query.videoName+'&contentId='+req.query.contentId;
@@ -206,18 +224,23 @@ app.get('/upload-form',function(req,res){
   var url='https://api.vimeo.com/me/videos';
   axiosVimeo.post(url,data,'').then(function (response) {
   var response ={
+    "status": response.status,
     "uri":response.data.uri,
     "link":response.data.link,
     "formData":response.data.upload.form
   }
   res.send(response);
   }).catch(function (error) {
-    // handle error
-    console.log(error);
+    var response = {
+      "status": error.response.status,
+      "message": error.response.data
+    }
+    res.send(response);
+    console.log(error.response.data);
   })
 });
 
-app.get('/video', function(req, res){
+app.get('/video',protectedRoutes,function(req, res){
   var contentId=req.query.contentId;
   var url='';
   if(req.query.contentId!=null){
