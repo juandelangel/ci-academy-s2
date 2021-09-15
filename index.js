@@ -110,7 +110,7 @@ app.get('/', function(req, res){
   res.send('Hello shikita.');
 });
 
-app.get('/file', function(req, res){
+app.get('/file',protectedRoutes, function(req, res){
   var contentId=req.query.contentId;
   var key=req.query.key;
   var user=req.query.user;
