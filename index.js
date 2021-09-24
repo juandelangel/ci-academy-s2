@@ -44,7 +44,7 @@ app.post('/auth', (req, res) => {
    check:  true
   };
   const token = jwt.sign(payload, app.get('key'), {
-   expiresIn: 60
+   expiresIn: 1500
   });
   res.json({
    status:200,
