@@ -7,7 +7,7 @@ const configJwt = require('./configs/config')
 const axios = require('axios');
 const axiosVimeo = require('axios');
 const cors = require('cors');
-const PORT = 443;
+const PORT = 8443;
 const app = express();
 app.use(cors());
 var propertiesReader = require('properties-reader');
