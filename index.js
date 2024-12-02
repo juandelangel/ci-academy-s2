@@ -95,8 +95,8 @@ protectedRoutes.use((req, res, next) => {
 //app.use(cors());
 
 https.createServer({
-  key: fs.readFileSync('/etc/letsencrypt/live/condorinnovationacademy.online/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/condorinnovationacademy.online/fullchain.pem')
+  key: fs.readFileSync('/etc/letsencrypt/live/api-failover-test1.online/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/api-failover-test1.online/fullchain.pem')
 }, app).listen(PORT, function(){
   console.log("My HTTPS server listening on port " + PORT + "...");
 });
