@@ -53,6 +53,7 @@ https.createServer({
 
 
 app.post('/test', function(req, res){
+  res.setHeader('Content-Type', 'application/json');
   res.send('{ "hasError": false, "errors": [], "data": { "rate": { "inflation": 0.006097 }, "fee": { "cardReplacementFee": 0.00, "annuity": 500.00, "collectionExpenses": 400.00 }, "totalAnnualCostValue": 3130000 } }');
 });
 
